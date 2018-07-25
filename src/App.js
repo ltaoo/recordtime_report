@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   Table,
+  DatePicker,
 } from 'antd';
 import moment from 'moment';
 import axios from 'axios';
@@ -66,22 +67,34 @@ class App extends Component {
   componentDidMount() {
     const today = moment().format('YYYY-MM-DD');
     const [starttime, endtime] = getDayRange(today);
+    this.fetch({
+      starttime,
+      endtime,
+    });
+  }
+  fetch = (params) => {
     axios.get(api, {
-      params: {
-        starttime,
-        endtime,
-      },
+      params,
     })
       .then((res) => {
         this.setState({
           dataSource: formatResponse(res),
         });
-      })
+      });
+  }
+  handleChangeDate = (value) => {
+    const day = value.format('YYYY-MM-DD');
+    const [starttime, endtime] = getDayRange(day);
+    this.fetch({
+      starttime,
+      endtime,
+    });
   }
   render() {
     const { dataSource } = this.state;
     return (
       <div className="App">
+        <DatePicker onChange={this.handleChangeDate} />
         <Table
           rowKey="id"
           columns={columns}
