@@ -117,6 +117,6 @@
 
 - API 返回数据格式修改为更友好的方式
 
-## 项目截图
+## screenshot
 
-![示例](./img.png)
+![示例](./screenshots01.png)
