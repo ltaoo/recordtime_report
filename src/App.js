@@ -179,6 +179,10 @@ class App extends Component {
     });
   }
   hideAddApiModal = () => {
+    const { api } = this.state;
+    if (!api) {
+      return;
+    }
     this.setState({
       addApiModalVisible: false,
     });
