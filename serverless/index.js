@@ -2,6 +2,7 @@
  * @file 增删改查
  * @author wuya
  */
+const app = require('fc-koa2-helper');
 const TableStore = require('tablestore');
 const Long = TableStore.Long;
 
@@ -83,15 +84,41 @@ async function update(client, options) {
   });
 }
 
-exports.handler = async function(event, context, callback) {
-  // 连接数据库
-  // const client = await connect(context);
-
-  const response = {
-    isBase64Encoded: false,
-    statusCode: 200,
-    body: event.toString(),
+app.all('/(.*)', async (ctx)=>{
+  console.log(`${ctx.method} ${ctx.path} ${ctx}`)
+  //common codes goes here
+  ctx.status = 200;
+  ctx.body = {
+    code: 'ok',
+    message: 'success',
+    users: [],
+    method: ctx.method,
   };
+});
+// app.get('/users', async (ctx) => {
+//   ctx.status = 200;
+//   ctx.body = {
+//     code: 'ok',
+//     message: 'success',
+//     users: [],
+//   };
+// });
 
-  callback(null, response);
-};
+exports.handler = app.handler;
+
+// exports.handler = async function(event, context, callback) {
+//   // 连接数据库
+//   // const client = await connect(context);
+
+//   const response = {
+//     isBase64Encoded: false,
+//     statusCode: 200,
+//     body: JSON.stringify({
+//       app: typeof app.handler,
+//       event: event.toString(),
+//       context,
+//     }),
+//   };
+
+//   callback(null, response);
+// };
