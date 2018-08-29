@@ -57,9 +57,31 @@ Resources:
             x-aliyun-apigateway-api-name: list_users # api name
             x-aliyun-apigateway-fc:
               arn: acs:fc:::services/${issueTracker.Arn}/functions/${apis.Arn}/ # 授权调用函数计算
+          post:
+            x-aliyun-apigateway-api-name: create_user # api name
+            x-aliyun-apigateway-fc:
+              arn: acs:fc:::services/${issueTracker.Arn}/functions/${apis.Arn}/ # 授权调用函数计算
         '/users/[userId]':
           get:
             x-aliyun-apigateway-api-name: get_user # api name
+            x-aliyun-apigateway-request-parameters:
+              - apiParameterName: 'userId'
+                location: 'Path'
+                type: 'String'
+                parameterType: 'REQUIRED'
+            x-aliyun-apigateway-fc:
+              arn: acs:fc:::services/${issueTracker.Arn}/functions/${apis.Arn}/ # 授权调用函数计算
+          put:
+            x-aliyun-apigateway-api-name: update_user # api name
+            x-aliyun-apigateway-request-parameters:
+              - apiParameterName: 'userId'
+                location: 'Path'
+                type: 'String'
+                parameterType: 'REQUIRED'
+            x-aliyun-apigateway-fc:
+              arn: acs:fc:::services/${issueTracker.Arn}/functions/${apis.Arn}/ # 授权调用函数计算
+          delete:
+            x-aliyun-apigateway-api-name: delete_user # api name
             x-aliyun-apigateway-request-parameters:
               - apiParameterName: 'userId'
                 location: 'Path'

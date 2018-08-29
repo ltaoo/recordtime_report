@@ -105,6 +105,35 @@ app.get('/users/:userId', async (ctx) => {
     users: [userId],
   };
 });
+app.put('/users/:userId', async (ctx) => {
+  const userId = ctx.params.userId;
+  const body = ctx.body;
+  ctx.status = 200;
+  ctx.body = {
+    code: 'ok',
+    message: 'success',
+    users: [userId],
+    body,
+  };
+});
+app.delete('/users/:userId', async (ctx) => {
+  const userId = ctx.params.userId;
+  ctx.status = 200;
+  ctx.body = {
+    code: 'ok',
+    message: 'success',
+    users: [userId],
+  };
+});
+app.post('/users', async (ctx) => {
+  const body = ctx.body;
+  ctx.status = 200;
+  ctx.body = {
+    code: 'ok',
+    message: 'success',
+    body,
+  };
+});
 
 exports.handler = app.handler;
 
