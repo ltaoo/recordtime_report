@@ -52,6 +52,21 @@ Resources:
             x-aliyun-apigateway-api-name: apis # api name
             x-aliyun-apigateway-fc:
               arn: acs:fc:::services/${issueTracker.Arn}/functions/${apis.Arn}/ # 授权调用函数计算
+        '/users':
+          get:
+            x-aliyun-apigateway-api-name: list_users # api name
+            x-aliyun-apigateway-fc:
+              arn: acs:fc:::services/${issueTracker.Arn}/functions/${apis.Arn}/ # 授权调用函数计算
+        '/users/[userId]':
+          get:
+            x-aliyun-apigateway-api-name: get_user # api name
+            x-aliyun-apigateway-request-parameters:
+              - apiParameterName: 'userId'
+                location: 'Path'
+                type: 'String'
+                parameterType: 'REQUIRED'
+            x-aliyun-apigateway-fc:
+              arn: acs:fc:::services/${issueTracker.Arn}/functions/${apis.Arn}/ # 授权调用函数计算
 
   issue-tracker: # TableStore 的实例名，不能驼峰
     Type: 'Aliyun::Serverless::TableStore'

@@ -87,22 +87,24 @@ async function update(client, options) {
 app.all('/(.*)', async (ctx)=>{
   console.log(`${ctx.method} ${ctx.path} ${ctx}`)
   //common codes goes here
+});
+app.get('/users', async (ctx) => {
   ctx.status = 200;
   ctx.body = {
     code: 'ok',
     message: 'success',
-    users: [],
-    method: ctx.method,
+    users: ['hello world'],
   };
 });
-// app.get('/users', async (ctx) => {
-//   ctx.status = 200;
-//   ctx.body = {
-//     code: 'ok',
-//     message: 'success',
-//     users: [],
-//   };
-// });
+app.get('/users/:userId', async (ctx) => {
+  const userId = ctx.params.userId;
+  ctx.status = 200;
+  ctx.body = {
+    code: 'ok',
+    message: 'success',
+    users: [userId],
+  };
+});
 
 exports.handler = app.handler;
 
