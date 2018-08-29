@@ -8,12 +8,12 @@ Resources:
       Policies:
         - AliyunOTSFullAccess # 表格存储
         # - AliyunSTSAssumeRoleAccess # 访问控制
-        # - AliyunLogFullAccess # 日志服务
-        # - AliyunFCInvocationAccess # 调用函数计算
+        - AliyunLogFullAccess # 日志服务
+        - AliyunFCInvocationAccess # 调用函数计算
       # Log 配置
-      # LogConfig:
-      #   Project: log-issue-tracker
-      #   Logstore: fclog
+      LogConfig:
+        Project: log-issue-tracker
+        Logstore: fclog
     apis: # function name
       Type: 'Aliyun::Serverless::Function'
       Properties:
@@ -52,7 +52,7 @@ Resources:
             x-aliyun-apigateway-api-name: apis # api name
             x-aliyun-apigateway-fc:
               arn: acs:fc:::services/${issueTracker.Arn}/functions/${apis.Arn}/ # 授权调用函数计算
-        '/users':
+        '/issues':
           get:
             x-aliyun-apigateway-api-name: list_users # api name
             x-aliyun-apigateway-fc:
@@ -61,7 +61,7 @@ Resources:
             x-aliyun-apigateway-api-name: create_user # api name
             x-aliyun-apigateway-fc:
               arn: acs:fc:::services/${issueTracker.Arn}/functions/${apis.Arn}/ # 授权调用函数计算
-        '/users/[userId]':
+        '/issues/[userId]':
           get:
             x-aliyun-apigateway-api-name: get_user # api name
             x-aliyun-apigateway-request-parameters:
@@ -99,8 +99,17 @@ Resources:
       Type: 'Aliyun::Serverless::TableStore::Table'
       Properties:
         PrimaryKeyList: # 主键
-          - Name: uid
+          - Name: id
             Type: STRING
+  log-issue-tracker: # TODO replace sls project name
+    Type: 'Aliyun::Serverless::Log'
+    Properties:
+      Description: log
+    fclog:
+      Type: 'Aliyun::Serverless::Log::Logstore'
+      Properties:
+        TTL: 10
+        ShardCount: 1
 
 
 
