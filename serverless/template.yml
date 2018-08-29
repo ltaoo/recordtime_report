@@ -1,0 +1,38 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Transform: 'Aliyun::Serverless-2018-04-03'
+Resources:
+  issueTracker: # service name
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      Description: 'issue tracker'
+      # Policies:
+        # - AliyunOTSFullAccess # 表格存储
+        # - AliyunSTSAssumeRoleAccess # 访问控制
+        # - AliyunLogFullAccess # 日志服务
+        # - AliyunFCInvocationAccess # 调用函数计算
+      # Log 配置
+      # LogConfig:
+      #   Project: log-issue-tracker
+      #   Logstore: fclog
+    apis: # function name
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Description: 'backend server'
+        Runtime: nodejs8
+        Timeout: 60
+        MemorySize: 128
+        Handler: index.handler
+        CodeUri: './'
+        # EnvironmentVariables: # 应该将与个人服务相关的变量都以环境变量形式提供
+        #   ENV_CONFIG: '...'
+
+  issueTrackerApis: # Api Group
+    Type: 'Aliyun::Serverless::Api'
+    Properties:
+      StageName: RELEASE
+      DefinitionBody:
+        '/': # request path
+          get: # http method
+            x-aliyun-apigateway-api-name: apis # api name
+            x-aliyun-apigateway-fc:
+              arn: acs:fc:::services/${issueTracker.Arn}/functions/${apis.Arn}/ # 授权调用函数计算
