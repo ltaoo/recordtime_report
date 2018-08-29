@@ -5,8 +5,8 @@ Resources:
     Type: 'Aliyun::Serverless::Service'
     Properties:
       Description: 'issue tracker'
-      # Policies:
-        # - AliyunOTSFullAccess # 表格存储
+      Policies:
+        - AliyunOTSFullAccess # 表格存储
         # - AliyunSTSAssumeRoleAccess # 访问控制
         # - AliyunLogFullAccess # 日志服务
         # - AliyunFCInvocationAccess # 调用函数计算
@@ -23,8 +23,24 @@ Resources:
         MemorySize: 128
         Handler: index.handler
         CodeUri: './'
-        # EnvironmentVariables: # 应该将与个人服务相关的变量都以环境变量形式提供
-        #   ENV_CONFIG: '...'
+        EnvironmentVariables: # 应该将与个人服务相关的变量都以环境变量形式提供
+          InstanceName: issue-tracker
+          TableName: record
+          Endpoint: https://issue-tracker.cn-hangzhou.ots.aliyuncs.com
+    # record:
+    #   Type: 'Aliyun::Serverless::Function'
+    #   Properties:
+    #     Handler: index.handler
+    #     Runtime: nodejs8
+    #     Description: 'send hangzhou weather'
+    #     CodeUri: './'
+    #   Events:
+    #     TmTrigger:
+    #       Type: Timer
+    #       Properties: 
+    #         Payload: "awesome-fc"
+    #         CronExpression: "0 0 8 * * *"  # utc 时间，北京时间减8小时
+    #         Enable: true
 
   issueTrackerApis: # Api Group
     Type: 'Aliyun::Serverless::Api'
@@ -36,3 +52,19 @@ Resources:
             x-aliyun-apigateway-api-name: apis # api name
             x-aliyun-apigateway-fc:
               arn: acs:fc:::services/${issueTracker.Arn}/functions/${apis.Arn}/ # 授权调用函数计算
+
+  issue-tracker: # TableStore 的实例名，不能驼峰
+    Type: 'Aliyun::Serverless::TableStore'
+    Properties:
+      ClusterType: HYBRID
+      Description: issue store
+    record:
+      Type: 'Aliyun::Serverless::TableStore::Table'
+      Properties:
+        PrimaryKeyList: # 主键
+          - Name: uid
+            Type: STRING
+
+
+
+

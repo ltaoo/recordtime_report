@@ -120,3 +120,11 @@
 ## screenshot
 
 ![示例](./screenshots01.png)
+
+## serverless
+
+后端使用阿里云函数计算，配置方式如下。
+
+### 配置模板
+
+https://github.com/aliyun/fun/blob/master/docs/specs/2018-04-03-zh-cn.md?spm=a2c4e.11153940.blogcont613780.27.7cbf6c76Tha3BD&file=2018-04-03-zh-cn.md
