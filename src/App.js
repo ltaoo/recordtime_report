@@ -10,7 +10,7 @@ import {
   Card,
 } from 'antd';
 import moment from 'moment';
-// import axios from 'axios';
+import axios from 'axios';
 
 import SiderMenu from './components/SiderMenu';
 import { 
@@ -111,10 +111,11 @@ export default class App extends Component {
   async fetch (params) {
     const { api } = this.state;
     try {
-      // const res = await axios.get(api, {
-      //   params,
-      // });
-      const dataSource = formatResponse({ data: MOCK_DATASOURCE });
+      const res = await axios.get(api, {
+        params,
+      });
+      // const dataSource = formatResponse({ data: MOCK_DATASOURCE });
+      const dataSource = formatResponse(res);
       const { detail: data, total, timerTotal } = getChartData(dataSource);
       console.log(dataSource, data, total);
       // 横轴是确定的，24 小时
@@ -205,7 +206,6 @@ export default class App extends Component {
                 <DatePicker onChange={this.handleChangeDate} />
               )}
             >
-              {/* <MiniArea color="#975FE4" data={data} /> */}
               <Bar height={292} data={data} />
             </ChartCard>
             <Card>
