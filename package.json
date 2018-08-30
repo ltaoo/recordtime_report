@@ -57,6 +57,7 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-fittext": "^1.0.0",
+    "url-parse": "^1.4.3",
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
