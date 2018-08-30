@@ -21,6 +21,8 @@ import { getChartData, getTimeText } from './utils';
 
 import MOCK_DATASOURCE from './mock/data';
 
+// axios.get('https://1851343155697899.cn-hangzhou.fc.aliyuncs.com/2016-08-15/proxy/record_time/test/?starttime=1535558400000&endtime=1535644799000').then(console.log).catch(console.error);
+
 const { Header, Content } = Layout;
 
 const URL_REGEXP = new RegExp('[a-zA-z]+://[^]*');
@@ -50,8 +52,8 @@ const columns = [
  * @param {string} date - 指定天
  */
 function getDayRange(date) {
-  const start = moment(date).startOf();
-  const end = moment(date).endOf();
+  const start = new Date(date).setHours(0, 0 ,0);
+  const end = new Date(date).setHours(23, 59 ,59);
   return [start.valueOf(), end.valueOf()];
 }
 
@@ -110,32 +112,33 @@ export default class App extends Component {
   }
   async fetch (params) {
     const { api } = this.state;
-    try {
-      const res = await axios.get(api, {
-        params,
-      });
-      // const dataSource = formatResponse({ data: MOCK_DATASOURCE });
-      const dataSource = formatResponse(res);
-      const { detail: data, total, timerTotal } = getChartData(dataSource);
-      console.log(dataSource, data, total);
-      // 横轴是确定的，24 小时
-      const chartData = [];
-      Object.keys(data).forEach(hour => {
-        chartData.push({
-          x: `${hour}:00`,
-          y: Math.floor(data[hour] / 1000 / 60),
+    axios.get(api, {
+      params,
+    })
+      .then((res) => {
+        // const dataSource = formatResponse({ data: MOCK_DATASOURCE });
+        const dataSource = formatResponse(res);
+        const { detail: data, total, timerTotal } = getChartData(dataSource);
+        console.log(dataSource, data, total);
+        // 横轴是确定的，24 小时
+        const chartData = [];
+        Object.keys(data).forEach(hour => {
+          chartData.push({
+            x: `${hour}:00`,
+            y: Math.floor(data[hour] / 1000 / 60),
+          });
         });
+        this.setState({
+          dataSource,
+          data: chartData,
+          total,
+          timerTotal,
+          loading: false,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
       });
-      this.setState({
-        dataSource,
-        data: chartData,
-        total,
-        timerTotal,
-        loading: false,
-      });
-    } catch(err) {
-      console.error(err);
-    }
   }
   handleChangeDate = (value) => {
     const day = value.format('YYYY-MM-DD');
