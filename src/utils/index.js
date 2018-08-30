@@ -12,6 +12,7 @@ import moment from 'moment';
 export function getChartData(dataSource) {
   const res = {};
   let total = 0;
+  let timerTotal = 0;
   // 首先按小时计算，先列出 8 到 22 点的 x 轴
   for (let i = 0, l = dataSource.length; i < l; i += 1) {
     // 单条记录
@@ -19,6 +20,10 @@ export function getChartData(dataSource) {
     const startTime = parseInt(record.starttime, 10);
     const endTime = parseInt(record.endtime, 10);
     const spend = endTime - startTime;
+    console.log(spend, 25 * 60 * 1000);
+    if (Math.floor(spend / 1000 / 60) === 25) {
+      timerTotal += 1;
+    }
     total += spend;
     console.log(startTime, endTime);
     // 看这条记录是否落在单个小时内
@@ -38,6 +43,8 @@ export function getChartData(dataSource) {
   return {
     detail: res,
     total,
+    // 几个番茄钟
+    timerTotal,
   };
 }
 

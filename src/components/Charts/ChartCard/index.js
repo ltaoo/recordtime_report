@@ -11,10 +11,10 @@ const renderTotal = total => {
       totalDom = null;
       break;
     case 'function':
-      totalDom = <div className={styles.total}>{total()}</div>;
+      totalDom = <span className={styles.total}>{total()}</span>;
       break;
     default:
-      totalDom = <div className={styles.total}>{total}</div>;
+      totalDom = <span className={styles.total}>{total}</span>;
   }
   return totalDom;
 };
@@ -40,11 +40,13 @@ const ChartCard = ({
       >
         <div className={styles.avatar}>{avatar}</div>
         <div className={styles.metaWrap}>
-          <div className={styles.meta}>
-            <span className={styles.title}>{title}</span>
+          <div className={styles.meta} style={{ marginBottom: 20 }}>
+            <span className={styles.title}>
+              {title}
+              {renderTotal(total)}
+            </span>
             <span className={styles.action}>{action}</span>
           </div>
-          {renderTotal(total)}
         </div>
       </div>
       {children && (

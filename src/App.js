@@ -115,7 +115,7 @@ export default class App extends Component {
       //   params,
       // });
       const dataSource = formatResponse({ data: MOCK_DATASOURCE });
-      const { detail: data, total } = getChartData(dataSource);
+      const { detail: data, total, timerTotal } = getChartData(dataSource);
       console.log(dataSource, data, total);
       // 横轴是确定的，24 小时
       const chartData = [];
@@ -128,7 +128,8 @@ export default class App extends Component {
       this.setState({
         dataSource,
         data: chartData,
-        // total: getTimeText(total),
+        total,
+        timerTotal,
         loading: false,
       });
     } catch(err) {
@@ -184,7 +185,9 @@ export default class App extends Component {
     this.hideAddApiModal();
   }
   render() {
-    const { loading, dataSource, data, total, addApiModalVisible, api } = this.state;
+    const { loading, dataSource, data, total, timerTotal, addApiModalVisible, api } = this.state;
+
+    const title = `总时长：${getTimeText(total)}   番茄钟数：${timerTotal}`;
     return (
       <Layout>
         <SiderMenu />
@@ -197,9 +200,7 @@ export default class App extends Component {
               head={<span style={{ lineHeight: '32px' }}>每小时工作时长趋势</span>}
               loading={loading}
               style={{ marginBottom: 20 }}
-              // total={numeral(total).format('0,0')}
-              // footer={<Field label="日访问量" value={numeral(1234).format('0,0')} />}
-              // contentHeight={46}
+              title={title}
               extra={(
                 <DatePicker onChange={this.handleChangeDate} />
               )}
